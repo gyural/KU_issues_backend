@@ -8,12 +8,12 @@ const conn = maria.createConnection({
     database: 'new_schema'
 });
 
-// conn.connect(function(err) {
-//   if (err) throw err;
-//   conn.query("SELECT * FROM new_table", function (err, result, fields) {
-//     if (err) throw err;
-//     console.log(result);
-//   });}
-// )
+conn.connect(function(err) {
+  if (err) {
+    console.error('mariaDB connection error:', err);
+  } else {
+    console.log("mariaDB connected");
+  }
+});
 
 module.exports = conn;
