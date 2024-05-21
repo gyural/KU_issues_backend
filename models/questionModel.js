@@ -1,23 +1,19 @@
 const { DataTypes, Sequelize } = require('sequelize');
 
 
-class SurveyModel extends Sequelize.Model{
+class QuestionModel extends Sequelize.Model{
   static init(sequelize){
     return super.init({
+      // survye pk 참조
       id:{
         type: DataTypes.INTEGER,
         primaryKey: true,
-        autoIncrement: true
-      },
-      author:{
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      title:{
+      }, 
+      question:{
         type: DataTypes.STRING,
         allowNull: false
       },
-      description:{
+      questionType:{
         type: DataTypes.STRING,
         allowNull: false
       }
@@ -25,11 +21,11 @@ class SurveyModel extends Sequelize.Model{
     {
       sequelize,
       timestamps: true,
-      modelName: 'SurveyModel',
-      tableName: 'surveyModel',
+      modelName: 'QuestionModel',
+      tableName: 'questionModel',
     })
   }
   
 }
 
-module.exports = SurveyModel
+module.exports = QuestionModel
