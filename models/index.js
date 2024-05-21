@@ -1,7 +1,7 @@
 const { Sequelize } = require('sequelize');
 
 // 모델 모듈
-const SurveyDocuments = require('./surveyModel')
+const SurveyModel = require('./surveyModel')
 
 const db = {}
 const sequelize = new Sequelize('kuissue', 'root', '1234', {
@@ -11,11 +11,8 @@ const sequelize = new Sequelize('kuissue', 'root', '1234', {
 });
 
 db.sequelize = sequelize;
-db.SurveyDocuments = SurveyDocuments
+db.SurveyDocuments = SurveyModel
 
-SurveyDocuments.init(sequelize)
-
-
-
+SurveyModel.init(sequelize)
 
 module.exports = db;
