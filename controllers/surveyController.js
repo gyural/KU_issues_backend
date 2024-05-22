@@ -1,4 +1,4 @@
-const surveyDocument = require('../models/surveyModel')
+const surveyModel = require('../models/survey/surveyModel')
 
 /**
  * 
@@ -9,7 +9,7 @@ const surveyDocument = require('../models/surveyModel')
 const createSurveyDoc = async(req, res)=>{
   const {author, title, description} =req.body
   console.log(author, title, description)
-  const result = await surveyDocument.create({
+  const result = await surveyModel.create({
     author: author,
     title: title,
     description: description,
@@ -24,7 +24,7 @@ const createSurveyDoc = async(req, res)=>{
  * @param {*} res 
  */
 const getSurveyDoc = async(req, res)=>{
-  const result = await surveyDocument.findAll()
+  const result = await surveyModel.findAll()
   res.status(200).json(result)
 
 }
