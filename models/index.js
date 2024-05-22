@@ -7,6 +7,9 @@ const QuestionModel = require('./survey/questionModel')
 const SurveyRes = require('./survey/surveyRes')
 const SurveyAns = require('./survey/surveyAns')
 
+const UserModel = require("./user/userModel");
+
+
 const db = {}
 const sequelize = new Sequelize('project', 'user', '1234', {
   host: 'localhost',
@@ -21,6 +24,10 @@ SurveyModel.init(sequelize);
 QuestionModel.init(sequelize);
 SurveyRes.init(sequelize)
 SurveyAns.init(sequelize)
+
+// UserModel 초기화
+UserModel.init(sequelize)
+
 
 // 관계 설정
 SurveyModel.hasMany(QuestionModel, {
@@ -52,5 +59,6 @@ db.SurveyModel = SurveyModel
 db.QuestionModel = QuestionModel
 db.SurveyRes = SurveyRes
 db.SurveyAns = SurveyAns
+db.UserModel = UserModel
 
 module.exports = db;
