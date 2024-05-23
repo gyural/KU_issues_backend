@@ -8,7 +8,8 @@ class QuestionModel extends Sequelize.Model{
       id:{
         type: DataTypes.INTEGER,
         primaryKey: true,
-      }, 
+        autoIncrement: true
+      },
       question:{
         type: DataTypes.STRING,
         allowNull: false
