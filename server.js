@@ -15,7 +15,8 @@ sequelize
 })
 
 app.use(express.json())
-app.use("/api", require("./routers/registerRoute"))
+app.use('/survey', require("./routers/surveyRoute"))
+app.use("/api", require("./routers/loginRoute"))
 
 app.get('/', async (req, res) => {
     try {
