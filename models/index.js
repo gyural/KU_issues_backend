@@ -1,14 +1,11 @@
-const {Sequelize} = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 // 모델 모듈
-
 const SurveyModel = require('./survey/surveyModel')
 const QuestionModel = require('./survey/questionModel')
 const SurveyRes = require('./survey/surveyRes')
 const SurveyAns = require('./survey/surveyAns')
-
 const UserModel = require("./user/userModel");
-
 
 const db = {}
 const sequelize = new Sequelize('project', 'user', '1234', {
@@ -16,8 +13,6 @@ const sequelize = new Sequelize('project', 'user', '1234', {
   dialect: 'mariadb', // MariaDB 사용
   logging: false // 쿼리 로깅 비활성화
 });
-
-
 
 // SurveyModel들초기화
 SurveyModel.init(sequelize);
@@ -27,7 +22,6 @@ SurveyAns.init(sequelize)
 
 // UserModel 초기화
 UserModel.init(sequelize)
-
 
 // 관계 설정
 SurveyModel.hasMany(QuestionModel, {
@@ -51,7 +45,6 @@ SurveyRes.hasMany(SurveyAns,{
 SurveyAns.belongsTo(SurveyRes,{
   foreignKey: 'surveyResId'
 })
-
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize
