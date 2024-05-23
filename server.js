@@ -19,6 +19,7 @@ app.use(express.json())
 app.use("/api", require("./routers/registerRoute"))
 app.use('/api/survey', require("./routers/surveyRoute"))
 
+
 app.get('/', async (req, res) => {
     try {
         const connection = await conn;
