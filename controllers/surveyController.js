@@ -2,7 +2,8 @@ const surveyModel = require('../models/survey/surveyModel')
 const questionModel = require('../models/survey/questionModel');
 const responseModel = require("../models/survey/surveyRes")
 const answerModel = require('../models/survey/surveyAns');
-const { SurveyAns } = require('../models');
+const { SurveyAns, SurveyRes } = require('../models');
+const { where } = require('sequelize');
 
 
 /**
@@ -179,7 +180,27 @@ const getQuestions = async (surveyID) =>{
   return questionList
 }
 
-const getSurveyAnswer = async ()=>{
+const getSurveyAnswer = async (req, res)=>{
+  const {id} = req.params
+  if(!id){
+    res.status(400).json({ error: 'surveyID are required' });
+  }
+
+  try {
+    let surveyResponses = await responseModel.findAll({where: {surveyID: id}})
+    surveyResponses =surveyResponses.map(res=>{
+      return res.dataValues
+    })
+    const answers = await Promise.all(surveyResponses.map(async (res)=>{
+      console.log(res)
+      return await answerModel.findAll({where: {surveyResId: res.id}})}
+    ))
+    return res.status(200).json({surveyResponses, answers})
+  } catch (error) {
+    return res.status(500).json({error: error})
+  }
+
+  
   
 }
-module.exports = {createSurveyDoc, getSurveyDoc, getSurveyOne, createResponse}
+module.exports = {createSurveyDoc, getSurveyDoc, getSurveyOne, createResponse, getSurveyAnswer}
