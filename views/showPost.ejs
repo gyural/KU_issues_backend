@@ -10,7 +10,8 @@
     <ul>
       <% data.forEach(post => { %>
         <li>
-          <h2><%= post.title %></h2>
+          <!--<h2><%= post.title %></h2>-->
+          <h2><a href="/api/posts/<%= post.post_id %>"><%= post.title %></a></h2>
           <p><%= post.body %></p>
           <p>User ID: <%= post.user_id %></p>
         </li>
