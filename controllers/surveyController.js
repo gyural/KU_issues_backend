@@ -178,4 +178,8 @@ const getQuestions = async (surveyID) =>{
 
   return questionList
 }
+
+const getSurveyAnswer = async ()=>{
+  
+}
 module.exports = {createSurveyDoc, getSurveyDoc, getSurveyOne, createResponse}
