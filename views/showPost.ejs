@@ -6,6 +6,15 @@
     <title>Document</title>
 </head>
 <body>
-    <h2>showAllPost</h2>
-</body>
+    <h1>All Posts</h1>
+    <ul>
+      <% data.forEach(post => { %>
+        <li>
+          <h2><%= post.title %></h2>
+          <p><%= post.body %></p>
+          <p>User ID: <%= post.user_id %></p>
+        </li>
+      <% }) %>
+    </ul>
+  </body>
 </html>

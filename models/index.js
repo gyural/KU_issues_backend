@@ -6,9 +6,8 @@ const SurveyModel = require('./survey/surveyModel')
 const QuestionModel = require('./survey/questionModel')
 const SurveyRes = require('./survey/surveyRes')
 const SurveyAns = require('./survey/surveyAns')
-
 const UserModel = require("./user/userModel");
-
+const PostModel = require("./post/postModel"); // 추가
 
 const db = {}
 const sequelize = new Sequelize('project', 'user', '1234', {
@@ -19,14 +18,13 @@ const sequelize = new Sequelize('project', 'user', '1234', {
 
 
 
-// SurveyModel들초기화
+// Model 초기화
 SurveyModel.init(sequelize);
 QuestionModel.init(sequelize);
-SurveyRes.init(sequelize)
-SurveyAns.init(sequelize)
-
-// UserModel 초기화
-UserModel.init(sequelize)
+SurveyRes.init(sequelize);
+SurveyAns.init(sequelize);
+UserModel.init(sequelize);
+PostModel.init(sequelize); // 추가 
 
 
 // 관계 설정
@@ -60,5 +58,6 @@ db.QuestionModel = QuestionModel
 db.SurveyRes = SurveyRes
 db.SurveyAns = SurveyAns
 db.UserModel = UserModel
+db.PostModel = PostModel; // 추가
 
 module.exports = db;

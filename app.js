@@ -9,7 +9,7 @@ const postRouter= require("./routers/postRoute");
 
 // DB 연결 설정
 sequelize
-.sync({force: true})
+.sync({force: false})
 .then(()=>{
   console.log('데이터 베이스 연결 성공')
 }).catch(err=>{
