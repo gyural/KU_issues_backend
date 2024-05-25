@@ -1,5 +1,9 @@
 const surveyModel = require('../models/survey/surveyModel')
 const questionModel = require('../models/survey/questionModel');
+const responseModel = require("../models/survey/surveyRes")
+const answerModel = require('../models/survey/surveyAns');
+const { SurveyAns } = require('../models');
+
 
 /**
  * POST surveyModel
@@ -10,7 +14,6 @@ const questionModel = require('../models/survey/questionModel');
  */
 const createSurveyDoc = async (req, res) => {
   const { author, title, description, questionList } = req.body;
-  console.log(author, title, description, questionList)
   // 필수 값들이 모두 존재하는지 확인
   if (!author || !title || !description || !questionList) {
     return res.status(400).json({ error: 'author, title, description, and questionList are required' });
@@ -23,7 +26,7 @@ const createSurveyDoc = async (req, res) => {
       title: title,
       description: description,
     });
-    console.log(survey.id)
+
     const questions = await createQuestions(questionList, survey.id)
 
     // 생성된 설문 및 질문들을 응답으로 반환
@@ -34,8 +37,8 @@ const createSurveyDoc = async (req, res) => {
   }
 };
 
-/** GET surveyModel 
- *
+/** GET All surveyModel 
+ * / survey
  * @param {*} req 
  * @param {*} res 
  */
@@ -57,10 +60,10 @@ const getSurveyOne = async(req, res)=>{
   }
   try {
     const survey = await surveyModel.findByPk(id)
-    const questionList = await questionModel.findAll({ where: { surveyModelId: id } })
+    const questionList = await questionModel.findAll({ where: { surveyID: id } })
     
     const result = {survey: survey, questionList: questionList}
-    
+    console.log(result)
     return res.status(200).json(result)
 
   } catch (error) {
@@ -80,8 +83,10 @@ const createQuestions = async (questionList, surveyId) => {
 
     // 질문 생성
     await Promise.all(questionList.map(async (question) => {
-      const q = await questionModel.create({ question: question.question, questionType: question.questionType, 
-                                                      surveyModelId: surveyId });
+      const q = await questionModel.create({ 
+        question: question.question, 
+        questionType: question.questionType, 
+        surveyID: surveyId });
       createdQuestions.push(q);
     }));
 
@@ -91,4 +96,90 @@ const createQuestions = async (questionList, surveyId) => {
     throw err; // 에러를 상위로 전파하여 호출하는 쪽에서 처리하도록 함
   }
 }
-module.exports = {createSurveyDoc, getSurveyDoc, getSurveyOne}
+/**
+ * Post
+ * @param {*} req {surveyID, respondnet, answerLIst}
+ * @param {*} res 
+ * @returns 
+ */
+const createResponse = async (req, res) => {
+  const {surveyID, respondent, answerList} = req.body
+  if(!surveyID || !respondent || !answerList){
+    return res.status(400).json({ error: 'surveyID, respondent, answerList are required' });
+  }
+
+  try {
+    const surveyResponse = await responseModel.create({
+      respondent: respondent,
+      surveyID : surveyID
+    })
+    
+    const surveyAnswer =  await createAnswers(answerList, surveyResponse.surveyID, surveyResponse.id)
+    const result = {surveyResponse: surveyResponse, surveyAnswer: surveyAnswer}
+    
+    return res.status(201).json(result)
+  } catch (error) {
+    console.log(error)
+    if(surveyResponse){
+      await surveyResponse.destroy();
+    }
+
+    if(surveyAnswer){
+      await Promise.all(surveyAnswer.map(answer=>{answer.destroy()}))
+    }
+    return res.status(500).json({error: error})
+  }
+
+}
+
+/**
+ * Module
+ * @param {Array} answerList 
+ * @param {object} answer of answerList
+ * @param {int} answer.questionID
+ * @param {string} answer.answer
+ * @returns {odjecst[]} surveyAnswers
+ */
+const createAnswers = async (answerList, id, resID) => {
+  try {
+    // 질문 리스트 가져오기
+    let Questions =  await getQuestions(id)
+    Questions = Questions.map((item)=> {return item.dataValues})
+    if(answerList.length !== Questions.length){
+      return -1
+    }
+    // 질문 생성
+    const surveyAnswers = await Promise.all(answerList.map(async (surveyAnswer, idx) => {
+      const a = await answerModel.create({
+        answer: surveyAnswer.answer,
+        surveyResId: resID,
+        questionID: Questions[idx].id
+      });
+      return a;
+    }));
+
+    return surveyAnswers;
+  } catch (err) {
+    console.error('Error creating answers:', err);
+    throw err; // 에러를 상위로 전파하여 호출하는 쪽에서 처리하도록 함
+  }
+};
+
+
+/**
+ * Module
+ * @param {int} surveyID
+ * @returns {Array} questionList by surveyID
+ */
+const getQuestions = async (surveyID) =>{
+
+  const questionList = await questionModel.findAll({ where: { surveyID: surveyID } })
+
+
+  return questionList
+}
+
+const getSurveyAnswer = async ()=>{
+  
+}
+module.exports = {createSurveyDoc, getSurveyDoc, getSurveyOne, createResponse}
