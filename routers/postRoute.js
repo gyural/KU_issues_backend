@@ -53,11 +53,11 @@ router.post("/create", asyncHandler(async(req, res)=>{
  */
 router.get("/:post_id", asyncHandler(async (req, res) => {
     const post = await Post.findByPk(req.params.post_id);
-    const likesCount = await Like.count({ where: { post_id: req.params.post_id } }); // 추가한 부분!
-    console.log(likesCount);
+    const likesCount = await Like.count({ where: { post_id: req.params.post_id } }); 
+    // console.log(likesCount);
     if (post) {
         console.log("if")
-        res.render("showPostDetail", { post: post, likesCount}); // likeCount 추가!
+        res.render("showPostDetail", { post: post, likesCount}); 
     } else {
         res.status(404).send("Post not found");
     }
@@ -69,7 +69,7 @@ router.get("/:post_id", asyncHandler(async (req, res) => {
  */
 router.post("/:post_id/like", asyncHandler(async (req, res) => {
     const postId = req.params.post_id;
-    const userId = 1; // 실제 로그인된 사용자 ID로 대체되어야 합니다
+    const userId = 1; // 실제 로그인된 사용자 ID로 대체할 것
 
     try {
         const [like, created] = await Like.findOrCreate({
@@ -87,9 +87,5 @@ router.post("/:post_id/like", asyncHandler(async (req, res) => {
         res.status(500).send("An error occurred while liking the post.");
     }
 }));
-
-
-
-
 
 module.exports = router;
