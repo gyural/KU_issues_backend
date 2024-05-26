@@ -6,26 +6,40 @@ const getProfile = asyncHandler(async (req, res) => {
     const id = req.params.id;
     const user = await User.findByPk(id);
     if (!user) {
-        res.status(404).send('404 User not found');
+        res.status(404).send('User not found');
     } else {
-        res.json(user);
+        res.status(200).json(user);
     }
 });
 
 // PUT /api/profile/:id
+// Can Edit : grade, name, nickname, password
 const updateProfile = asyncHandler(async (req, res) => {
     const id = req.params.id;
-    const { name, nickname, grade } = req.body;
+    const { grade, name, nickname, password } = req.body;
     const user = await User.findByPk(id);
     if (!user) {
         res.status(404).send('User not found');
     } else {
+        user.grade = grade;
         user.name = name;
         user.nickname = nickname;
-        user.grade = grade;
+        user.password = password;
         await user.save();
-        res.send('User updated successfully');
+        res.status(200).send('Edit Success');
     }
 });
 
-module.exports = { getProfile, updateProfile };
+// DELETE /api/profile/:id
+const deleteProfile = asyncHandler(async (req, res) => {
+    const id = req.params.id;
+    const user = await User.findByPk(id);
+    if (!user) {
+        res.status(404).send('User not found');
+    } else {
+        await user.destroy();
+        res.status(200).send('Delete Success');
+    }
+});
+
+module.exports = { getProfile, updateProfile, deleteProfile };

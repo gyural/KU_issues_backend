@@ -23,7 +23,6 @@ app.use("/api", require("./routers/loginRoute"))
 app.get('/', async (req, res) => {
     try {
         const connection = await conn;
-        await connection.query('USE project'); // 추가 - project 데이터베이스 선택
         const rows = await connection.query('SHOW TABLES');
         res.send(`Database connection successful: ${rows}`);
     } catch (err) {
