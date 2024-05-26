@@ -2,7 +2,10 @@ const express= require("express");
 const router= express.Router();
 const asyncHandler= require("express-async-handler");
 const Post = require("../models/post/postModel");
+const Like = require("../models/post/likeModel");
 const { PostModel } = require("../models/index"); // 수정
+
+
 
 /**
  * 모든 게시판 내용 가져오기
@@ -45,15 +48,43 @@ router.post("/create", asyncHandler(async(req, res)=>{
 }));
 
 /**
- * 게시글 내용 확인
+ * 게시글 상세 조회
  * GET api/posts/{post_id}
  */
 router.get("/:post_id", asyncHandler(async (req, res) => {
     const post = await Post.findByPk(req.params.post_id);
+    const likesCount = await Like.count({ where: { post_id: req.params.post_id } }); // 추가한 부분!
+    console.log(likesCount);
     if (post) {
-        res.render("showPostDetail", { post: post });
+        console.log("if")
+        res.render("showPostDetail", { post: post, likesCount}); // likeCount 추가!
     } else {
         res.status(404).send("Post not found");
+    }
+}));
+
+/**
+ * 좋아요 버튼이 눌렸을 때
+ * POST /api/posts/:post_id/like
+ */
+router.post("/:post_id/like", asyncHandler(async (req, res) => {
+    const postId = req.params.post_id;
+    const userId = 1; // 실제 로그인된 사용자 ID로 대체되어야 합니다
+
+    try {
+        const [like, created] = await Like.findOrCreate({
+            where: { post_id: postId, user_id: userId },
+            defaults: { post_id: postId, user_id: userId }
+        });
+
+        if (!created) {
+            return res.status(400).send("You have already liked this post.");
+        }
+
+        res.redirect(`/api/posts/${postId}`);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("An error occurred while liking the post.");
     }
 }));
 

@@ -10,6 +10,12 @@
     <p><%= post.body %></p>
     <p>User ID: <%= post.user_id %></p>
     <p>Created At: <%= post.created_at %></p>
+
+    <form action="/api/posts/<%= post.post_id %>/like" method="POST"> <!-- 좋아요 누르기 -->
+        <button type="submit">Like</button> 
+    </form>
+    <p>Likes: <%= likesCount %></p> <!-- 좋아요 개수 표시 -->
+
     <a href="/api/posts">Back to All Posts</a>
 </body>
 </html>

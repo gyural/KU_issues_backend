@@ -7,7 +7,8 @@ const QuestionModel = require('./survey/questionModel')
 const SurveyRes = require('./survey/surveyRes')
 const SurveyAns = require('./survey/surveyAns')
 const UserModel = require("./user/userModel");
-const PostModel = require("./post/postModel"); // 추가
+const PostModel = require("./post/postModel"); 
+const LikeModel = require("./post/likeModel"); // 추가
 
 const db = {}
 const sequelize = new Sequelize('project', 'user', '1234', {
@@ -25,6 +26,7 @@ SurveyRes.init(sequelize);
 SurveyAns.init(sequelize);
 UserModel.init(sequelize);
 PostModel.init(sequelize); // 추가 
+LikeModel.init(sequelize);
 
 
 // 관계 설정
