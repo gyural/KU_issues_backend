@@ -2,9 +2,6 @@ const surveyModel = require('../models/survey/surveyModel')
 const questionModel = require('../models/survey/questionModel');
 const responseModel = require("../models/survey/surveyRes")
 const answerModel = require('../models/survey/surveyAns');
-const { SurveyAns, SurveyRes } = require('../models');
-const { where } = require('sequelize');
-
 
 /**
  * POST surveyModel
@@ -64,7 +61,6 @@ const getSurveyOne = async(req, res)=>{
     const questionList = await questionModel.findAll({ where: { surveyID: id } })
     
     const result = {survey: survey, questionList: questionList}
-    console.log(result)
     return res.status(200).json(result)
 
   } catch (error) {
@@ -200,7 +196,6 @@ const getSurveyAnswer = async (req, res)=>{
     return res.status(500).json({error: error})
   }
 
-  
-  
 }
+
 module.exports = {createSurveyDoc, getSurveyDoc, getSurveyOne, createResponse, getSurveyAnswer}
