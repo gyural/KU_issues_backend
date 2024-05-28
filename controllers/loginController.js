@@ -14,18 +14,37 @@ const jwtSecret = process.env.JWT_SECRET;
  * @param {*} password:string
  */
 const createUser = async(req, res) => {
-    const { id, name, nickname, grade, password } = req.body
-    const hashedPassword = await bcrypt.hash(password, 10)
-    console.log(id, name, nickname, grade, hashedPassword)
-    const result = await User.create({
-        id: id,
-        name: name,
-        nickname: nickname,
-        grade: grade,
-        password: hashedPassword,
-    })
+    const { id, name, nickname, grade, password, passwordCheck } = req.body
+    if (password === passwordCheck) {
+        const hashedPassword = await bcrypt.hash(password, 10)
+        result = await User.create({
+            id: id,
+            name: name,
+            nickname: nickname,
+            grade: grade,
+            password: hashedPassword,
+        })
+        res.status(201).json(result)
+    } else {
+        res.status(400).json({ message: "비밀번호가 일치하지 않습니다" })
+    }
+}
 
-    res.status(201).json(result)
+/**
+ * nicknameCheck
+ * @param {*} nickname:string
+ */
+const nicknameCheck = async(req, res) => {
+    const { nickname } = req.body
+    const check = await User.findOne({
+        attributes: ['nickname'],
+        where: { nickname: nickname }
+    })
+    if (check.nickname === nickname) {
+        res.status(400).json({ message: "중복되는 닉네임" })
+    } else {
+        res.status(201).json({ message: "사용할 수 있는 닉네임" })
+    }
 }
 
 /**
@@ -40,8 +59,6 @@ const loginUser = async(req, res) => {
         where: { id: id }
     })
 
-    console.log(check.password)
-
     const isMatch = await bcrypt.compare(password, check.password);
     if (!isMatch) {
         return res.json({ message: "비밀번호가 일치하지 않습니다." });
@@ -50,7 +67,7 @@ const loginUser = async(req, res) => {
     const token = jwt.sign({ id: check._id }, jwtSecret);
     res.cookie("token", token, { httpOnly: true });
 
-    res.json(token)
+    res.status(201).json(token)
 }
 
-module.exports = { createUser, loginUser }
+module.exports = { createUser, nicknameCheck, loginUser }
