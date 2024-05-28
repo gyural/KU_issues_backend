@@ -1,5 +1,9 @@
-const asyncHandler = require("express-async-handler")
+const asyncHandler = require("express-async-handler");
 const User = require('../models/user/userModel');
+const bcrypt = require("bcrypt");
+//require("dotenv").config();
+//const jwtSecret = process.env.JWT_SECRET
+//const jwt = require("jsonwebtoken")
 
 // GET /api/profile/:id
 const getProfile = asyncHandler(async (req, res) => {
@@ -24,7 +28,10 @@ const updateProfile = asyncHandler(async (req, res) => {
         user.grade = grade;
         user.name = name;
         user.nickname = nickname;
-        user.password = password;
+        if (password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            user.password = hashedPassword;
+        }
         await user.save();
         res.status(200).send('Edit Success');
     }

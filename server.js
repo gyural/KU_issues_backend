@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 
 const { conn } = require('./db');
-const { sequelize } = require("./models/index")
+const { sequelize } = require("./models/index");
 
 const app = express();
 const port = 3000;
