@@ -14,18 +14,20 @@ const jwtSecret = process.env.JWT_SECRET;
  * @param {*} password:string
  */
 const createUser = async(req, res) => {
-    const { id, name, nickname, grade, password } = req.body
-    const hashedPassword = await bcrypt.hash(password, 10)
-    console.log(id, name, nickname, grade, hashedPassword)
-    const result = await User.create({
-        id: id,
-        name: name,
-        nickname: nickname,
-        grade: grade,
-        password: hashedPassword,
-    })
-
-    res.status(201).json(result)
+    const { id, name, nickname, grade, password, passwordCheck } = req.body
+    if (password === passwordCheck) {
+        const hashedPassword = await bcrypt.hash(password, 10)
+        result = await User.create({
+            id: id,
+            name: name,
+            nickname: nickname,
+            grade: grade,
+            password: hashedPassword,
+        })
+        res.status(201).json(result)
+    } else {
+        res.status(400).json({ message: "비밀번호가 일치하지 않습니다" })
+    }
 }
 
 /**
@@ -50,7 +52,7 @@ const loginUser = async(req, res) => {
     const token = jwt.sign({ id: check._id }, jwtSecret);
     res.cookie("token", token, { httpOnly: true });
 
-    res.json(token)
+    res.status(201).json(token)
 }
 
 module.exports = { createUser, loginUser }
