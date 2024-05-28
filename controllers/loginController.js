@@ -1,5 +1,9 @@
 const User = require("../models/user/userModel")
 const bcrypt = require("bcrypt")
+const jwt = require("jsonwebtoken");
+
+require("dotenv").config();
+const jwtSecret = process.env.JWT_SECRET;
 
 /**
  * register
@@ -30,10 +34,10 @@ const createUser = async(req, res) => {
  * @param {*} password:string
  */
 const loginUser = async(req, res) => {
-    const { nickname, password } = req.body
+    const { id, password } = req.body
     const check = await User.findOne({
         attributes: ['password'],
-        where: { nickname: nickname }
+        where: { id: id }
     })
 
     console.log(check.password)
@@ -43,7 +47,10 @@ const loginUser = async(req, res) => {
         return res.json({ message: "비밀번호가 일치하지 않습니다." });
     }
 
-    res.json({ message: "로그인 완료!" })
+    const token = jwt.sign({ id: check._id }, jwtSecret);
+    res.cookie("token", token, { httpOnly: true });
+
+    res.json(token)
 }
 
 module.exports = { createUser, loginUser }
