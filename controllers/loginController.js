@@ -31,6 +31,23 @@ const createUser = async(req, res) => {
 }
 
 /**
+ * nicknameCheck
+ * @param {*} nickname:string
+ */
+const nicknameCheck = async(req, res) => {
+    const { nickname } = req.body
+    const check = await User.findOne({
+        attributes: ['nickname'],
+        where: { nickname: nickname }
+    })
+    if (check.nickname === nickname) {
+        res.status(400).json({ message: "중복되는 닉네임" })
+    } else {
+        res.status(201).json({ message: "사용할 수 있는 닉네임" })
+    }
+}
+
+/**
  * login
  * @param {*} nickname:string
  * @param {*} password:string
@@ -41,8 +58,6 @@ const loginUser = async(req, res) => {
         attributes: ['password'],
         where: { id: id }
     })
-
-    console.log(check.password)
 
     const isMatch = await bcrypt.compare(password, check.password);
     if (!isMatch) {
@@ -55,4 +70,4 @@ const loginUser = async(req, res) => {
     res.status(201).json(token)
 }
 
-module.exports = { createUser, loginUser }
+module.exports = { createUser, nicknameCheck, loginUser }
