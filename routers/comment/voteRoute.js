@@ -1,83 +1,65 @@
 const express = require("express");
 const router = express.Router();
 const asyncHandler = require("express-async-handler");
-const VoteModel = require("../models/comment/voteModel");
-const VoteResponseModel = require("../models/comment/voteresponseModel");
+const Vote = require("../models/vote/voteModel");
 const Post = require("../models/post/postModel");
 
-router.post("/create", asyncHandler(async (req, res) => {
+/**
+ * 투표의 현재 상태(찬성 수, 반대 수) 조회
+ * GET /api/votes/:post_id
+ */
+router.get("/:post_id", asyncHandler(async (req, res) => {
     try {
-        const { postID } = req.body;
+        const postId = req.params.post_id;
 
-        const newVote = await VoteModel.create({
-            postID: postID,
-            prosCnt: 0,
-            consCnt: 0
-        });
+        const upvotes = await Vote.count({ where: { post_id: postId, vote_type: "upvote" } });
+        const downvotes = await Vote.count({ where: { post_id: postId, vote_type: "downvote" } });
 
-        console.log("새로운 투표가 생성되었습니다.");
-        res.status(201).json(newVote);
+        res.status(200).json({ upvotes, downvotes });
     } catch (error) {
-        console.log("투표 생성 중 에러 발생", error);
-        res.status(500).send("투표 생성 중 에러가 발생했습니다.");
+        console.error("Failed to fetch vote counts:", error);
+        res.status(500).json({ message: "Failed to fetch vote counts." });
     }
 }));
 
-router.get("/:voteID", asyncHandler(async (req, res) => {
+/**
+ * 투표 생성
+ * POST /api/votes/:post_id
+ */
+router.post("/:post_id", asyncHandler(async (req, res) => {
     try {
-        const vote = await VoteModel.findByPk(req.params.voteID);
+        const { user_id, vote_type } = req.body;
+        const postId = req.params.post_id;
 
-        if (vote) {
-            res.json({
-                prosCnt: vote.prosCnt,
-                consCnt: vote.consCnt
-            });
-        } else {
-            res.status(404).send("Vote not found");
+        // 중복 투표 방지
+        const existingVote = await Vote.findOne({ where: { post_id: postId, user_id: user_id } });
+
+        if (existingVote) {
+            return res.status(400).json({ message: "User has already voted on this post." });
         }
-    } catch (error) {
-        console.log("투표 조회 중 에러 발생", error);
-        res.status(500).send("투표 조회 중 에러가 발생했습니다.");
-    }
-}));
 
+        // 새로운 투표 생성
+        const vote = await Vote.create({ post_id: postId, user_id: user_id, vote_type: vote_type });
 
-router.post("/:voteID/respond", asyncHandler(async (req, res) => {
-    try {
-        const { userID, response } = req.body; // response는 "pros" 또는 "cons" 중 하나
-        const voteID = req.params.voteID;
-
-        // 응답 확인
-        const existingResponse = await VoteResponseModel.findOne({
-            where: { voteID: voteID, userID: userID }
+        // 투표 수 증가
+        const voteCounts = await Vote.findAll({
+            attributes: [
+                [Sequelize.fn("COUNT", Sequelize.col("vote_type")), "count"],
+                "vote_type"
+            ],
+            where: { post_id: postId },
+            group: ["vote_type"]
         });
 
-        if (existingResponse) {
-            return res.status(400).send("You have already responded to this vote.");
-        }
+        const counts = voteCounts.reduce((acc, item) => {
+            acc[item.vote_type] = item.get("count");
+            return acc;
+        }, { upvote: 0, downvote: 0 });
 
-        // 새로운 응답 저장
-        await VoteResponseModel.create({
-            voteID: voteID,
-            userID: userID
-        });
-
-        // 찬성 또는 반대 수 증가
-        const vote = await VoteModel.findByPk(voteID);
-        if (response === "pros") {
-            vote.prosCnt += 1;
-        } else if (response === "cons") {
-            vote.consCnt += 1;
-        } else {
-            return res.status(400).send("Invalid response value. Must be 'pros' or 'cons'.");
-        }
-
-        await vote.save();
-
-        res.status(200).send("Vote response recorded successfully.");
+        res.status(201).json({ vote, counts });
     } catch (error) {
-        console.log("투표 응답 중 에러 발생", error);
-        res.status(500).send("투표 응답 중 에러가 발생했습니다.");
+        console.error("Failed to create vote:", error);
+        res.status(500).json({ message: "Failed to create vote." });
     }
 }));
 

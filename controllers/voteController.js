@@ -1,64 +1,52 @@
-const VoteModel = require('../models/comment/voteModel');
-const VoteResponseModel = require('../models/comment/voteresponseModel');
-const asyncHandler = require('express-async-handler');
+const Vote = require('../models/post/voteModel');
 
-// 투표 수 조회
-const getVoteCounts = asyncHandler(async (req, res) => {
-    const { postID } = req.params;
+/**
+ * 새로운 투표 생성
+ * @param {*} req 
+ * @param {*} res 
+ */
+const createVote = async (req, res) => {
+  const { post_id, user_id, vote_type } = req.body;
 
-    try {
-        const vote = await VoteModel.findOne({ where: { postID } });
+  try {
+    // 중복 투표 방지
+    const existingVote = await Vote.findOne({ where: { post_id, user_id } });
 
-        if (!vote) {
-            return res.status(404).json({ message: '투표 정보를 찾을 수 없습니다.' });
-        }
-
-        res.status(200).json({ prosCnt: vote.prosCnt, consCnt: vote.consCnt });
-    } catch (error) {
-        res.status(500).json({ message: '투표 수 조회 중 오류가 발생했습니다.', error });
+    if (existingVote) {
+      return res.status(400).json({ message: "User has already voted on this post." });
     }
-});
 
-// 찬성 투표
-const votePro = asyncHandler(async (req, res) => {
-    const { postID } = req.params;
-    const userID = req.user.userId;
+    // 새로운 투표 생성
+    const vote = await Vote.create({ post_id, user_id, vote_type });
 
-    try {
-        const voteResponse = await VoteResponseModel.findOne({ where: { voteID: postID, userID } });
+    // 투표 수 증가
+    const upvotes = await Vote.count({ where: { post_id, vote_type: 'upvote' } });
+    const downvotes = await Vote.count({ where: { post_id, vote_type: 'downvote' } });
 
-        if (voteResponse) {
-            return res.status(403).json({ message: '이미 투표하셨습니다.' });
-        }
+    res.status(201).json({ vote, upvotes, downvotes });
+  } catch (error) {
+    console.error("Failed to create vote:", error);
+    res.status(500).json({ message: "Failed to create vote." });
+  }
+};
 
-        await VoteModel.increment('prosCnt', { where: { postID } });
-        await VoteResponseModel.create({ voteID: postID, userID });
+/**
+ * 게시물의 투표 수 조회
+ * @param {*} req 
+ * @param {*} res 
+ */
+const getVoteCounts = async (req, res) => {
+  const { post_id } = req.params;
 
-        res.status(200).json({ message: '찬성 투표가 반영되었습니다.' });
-    } catch (error) {
-        res.status(500).json({ message: '찬성 투표 중 오류가 발생했습니다.', error });
-    }
-});
+  try {
+    const upvotes = await Vote.count({ where: { post_id, vote_type: 'upvote' } });
+    const downvotes = await Vote.count({ where: { post_id, vote_type: 'downvote' } });
 
-// 반대 투표
-const voteCon = asyncHandler(async (req, res) => {
-    const { postID } = req.params;
-    const userID = req.user.userId;
+    res.status(200).json({ upvotes, downvotes });
+  } catch (error) {
+    console.error("Failed to fetch vote counts:", error);
+    res.status(500).json({ message: "Failed to fetch vote counts." });
+  }
+};
 
-    try {
-        const voteResponse = await VoteResponseModel.findOne({ where: { voteID: postID, userID } });
-
-        if (voteResponse) {
-            return res.status(403).json({ message: '이미 투표하셨습니다.' });
-        }
-
-        await VoteModel.increment('consCnt', { where: { postID } });
-        await VoteResponseModel.create({ voteID: postID, userID });
-
-        res.status(200).json({ message: '반대 투표가 반영되었습니다.' });
-    } catch (error) {
-        res.status(500).json({ message: '반대 투표 중 오류가 발생했습니다.', error });
-    }
-});
-
-module.exports = { getVoteCounts, votePro, voteCon };
+module.exports = { createVote, getVoteCounts };

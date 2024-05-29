@@ -6,12 +6,13 @@ const QuestionModel = require('./survey/questionModel')
 const SurveyRes = require('./survey/surveyRes')
 const SurveyAns = require('./survey/surveyAns')
 const UserModel = require("./user/userModel");
+const CommentModel = require("./comment/commentModel")
 
 const db = {}
 const sequelize = new Sequelize('project', 'user', '1234', {
   host: 'localhost',
   dialect: 'mariadb', // MariaDB 사용
-  logging: false // 쿼리 로깅 비활성화
+  logging: false, // 쿼리 로깅 비활성화
 });
 
 // SurveyModel들초기화
@@ -22,6 +23,7 @@ SurveyAns.init(sequelize)
 
 // UserModel 초기화
 UserModel.init(sequelize)
+
 
 
 // 외래 키 관계 설정

@@ -3,6 +3,7 @@ const app = express()
 const {sequelize} = require("./models/index")
 const surveyRouter = require("./routers/surveyRoute")
 
+console.log("here")
 sequelize
 .sync({force: true})
 .then(()=>{
