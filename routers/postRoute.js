@@ -38,13 +38,14 @@ router.post("/create", asyncHandler(async(req, res)=>{
             title: title,
             body: body,
             vote_content: vote_content,
-            post_tag: post_tag, // post_tag 추가
+            post_tag: post_tag, 
             user_id: 1  // 임시로 설정(로그인 된 id를 받아와 자동으로 넣도록 후에 수정할 것)
         });
 
 
         console.log("데이터베이스에 값 삽입 완료");
-        res.redirect("/api/posts/");
+        // res.redirect("/api/posts/");
+        res.status(200).send("게시물 생성 성공");
     }catch(error){
         console.log("게시물 생성 중 에러 발생", error);
         res.status(500).send("게시물 생성 중 에러가 발생");
