@@ -3,15 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Add Post</title>
 </head>
 <body>
     <form action="/api/posts/create" method="post">
-        제목: <input type="text" placeholder="게시물 제목" name="title" id="title">
-        내용: <textarea name="body" id="body" cols="10" placeholder="게시물 내용"></textarea>
-        투표 내용: <input type="text" placeholder="투표 내용" name="vote_content" id="vote_content">
-       
-        <input type="submit" value="등록" class="btn">
+        <label for="title">Title:</label>
+        <input type="text" placeholder="Enter post title" name="title" id="title">
+        <br>
+        <label for="body">Body:</label>
+        <textarea name="body" id="body" cols="30" rows="10" placeholder="Enter post body"></textarea>
+        <br>
+        <label for="vote_content">Vote Content:</label>
+        <input type="text" placeholder="Enter vote content" name="vote_content" id="vote_content">
+        <br>
+        <label for="post_tag">Post Tag:</label>
+        <input type="text" placeholder="Enter post tag" name="post_tag" id="post_tag">
+        <br>
+        <input type="submit" value="Submit" class="btn">
     </form>
 </body>
 </html>

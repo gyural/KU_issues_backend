@@ -23,7 +23,11 @@ class Post extends Model {
                 },
                 vote_content: {
                     type: DataTypes.STRING(100),
-                    allowNull: true, // vote_content는 NULL 값을 허용하도록 설정
+                    allowNull: true,
+                },
+                post_tag: { // 새로운 열 post_tag 추가
+                    type: DataTypes.STRING(100),
+                    allowNull: true,
                 },
                 created_at: {
                     type: DataTypes.DATE,
