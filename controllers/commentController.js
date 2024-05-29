@@ -1,6 +1,6 @@
-const CommentModel = require("../models/commentModel");
-const UserModel = require("../models/userModel");
-const PostModel = require("../models/postModel");
+const CommentModel = require("../models/comment/commentModel");
+const UserModel = require("../models/user/userModel");
+const PostModel = require("../models/post/postModel");
 
 /**
  * 댓글 생성
