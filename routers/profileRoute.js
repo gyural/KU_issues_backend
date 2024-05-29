@@ -1,10 +1,19 @@
 const express = require('express');
 const router = express.Router();
-const { getProfile, updateProfile, deleteProfile } = require('../controllers/profileController');
+const { getProfile,
+    updateProfile,
+    deleteProfile,
+    authenticateToken } = require('../controllers/profileController');
 
-router.route('/profile/:id')
-    .get(getProfile)
-    .put(updateProfile)
-    .delete(deleteProfile);
+// GET /api/profile/:id
+router.get('/profile/:id', authenticateToken, getProfile);
+
+// PUT /api/profile/:id/edit
+router.put('/profile/:id/edit', authenticateToken, updateProfile);
+
+// DELETE /api/profile/:id
+router.delete('/profile/:id', authenticateToken, deleteProfile);
 
 module.exports = router;
+
+/*, authenticateToken*/

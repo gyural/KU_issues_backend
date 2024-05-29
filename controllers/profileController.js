@@ -1,9 +1,26 @@
 const asyncHandler = require("express-async-handler");
 const User = require('../models/user/userModel');
 const bcrypt = require("bcrypt");
-//require("dotenv").config();
-//const jwtSecret = process.env.JWT_SECRET
-//const jwt = require("jsonwebtoken")
+
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const jwtSecret = process.env.JWT_SECRET;
+
+// 토큰 검증 미들웨어
+const authenticateToken = (req, res, next) => {
+    const token = req.header('Authorization') && req.header('Authorization').split(' ')[1];
+    if (!token) {
+        return res.status(401).json({ message: 'No token, authorization denied' });
+    }
+
+    try {
+        const decoded = jwt.verify(token, jwtSecret);
+        req.user = decoded;
+        next();
+    } catch (err) {
+        res.status(401).json({ message: 'Token is not valid' });
+    }
+};
 
 // GET /api/profile/:id
 const getProfile = asyncHandler(async (req, res) => {
@@ -16,8 +33,7 @@ const getProfile = asyncHandler(async (req, res) => {
     }
 });
 
-// PUT /api/profile/:id
-// Can Edit : grade, name, nickname, password
+// PUT /api/profile/:id/edit
 const updateProfile = asyncHandler(async (req, res) => {
     const id = req.params.id;
     const { grade, name, nickname, password } = req.body;
@@ -49,4 +65,4 @@ const deleteProfile = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { getProfile, updateProfile, deleteProfile };
+module.exports = { getProfile, updateProfile, deleteProfile, authenticateToken };
