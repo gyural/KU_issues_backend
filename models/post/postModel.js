@@ -21,6 +21,10 @@ class Post extends Model {
                     type: DataTypes.STRING(100),
                     allowNull: false,
                 },
+                vote_content: {
+                    type: DataTypes.STRING(100),
+                    allowNull: true, // vote_content는 NULL 값을 허용하도록 설정
+                },
                 created_at: {
                     type: DataTypes.DATE,
                     defaultValue: DataTypes.NOW,

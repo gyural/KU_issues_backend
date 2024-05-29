@@ -3,7 +3,8 @@ const router= express.Router();
 const asyncHandler= require("express-async-handler");
 const Post = require("../models/post/postModel");
 const Like = require("../models/post/likeModel");
-const { PostModel } = require("../models/index"); // 수정
+const Vote = require("../models/post/voteModel"); // 추가
+const { PostModel } = require("../models/index"); 
 
 
 
@@ -30,16 +31,20 @@ router.get("/create", asyncHandler(async(req, res)=>{
  */
 router.post("/create", asyncHandler(async(req, res)=>{
     try{
-        const{title, body}= req.body;
-        console.log(title, body);
+        const{title, body, vote_content}= req.body;
+        console.log(title, body, vote_content);
+        console.log(req.body.post_id);
         
+        // 게시글 생성
         const newPost = await Post.create({ 
             title: title,
             body: body,
+            vote_content: vote_content,
             user_id: 1  // 임시로 설정(로그인 된 id를 받아와 자동으로 넣도록 후에 수정할 것)
         });
-        console.log("데이터베이스에 값 삽입 완료");
 
+
+        console.log("데이터베이스에 값 삽입 완료");
         res.redirect("/api/posts/");
     }catch(error){
         console.log("게시물 생성 중 에러 발생", error);
