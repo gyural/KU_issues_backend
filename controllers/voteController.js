@@ -1,5 +1,5 @@
-const VoteModel = require('../models/voteModel');
-const VoteResponseModel = require('../models/voteResponseModel');
+const VoteModel = require('../models/comment/voteModel');
+const VoteResponseModel = require('../models/comment/voteresponseModel');
 const asyncHandler = require('express-async-handler');
 
 // 투표 수 조회
