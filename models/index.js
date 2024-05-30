@@ -91,6 +91,92 @@ SurveyAns.belongsTo(QuestionModel, {
   }
 });
 
+
+// 직접 추가한 부분----------------------------------------------------------
+// 외래 키 관계 설정
+
+// users - posts (id)
+UserModel.hasMany(PostModel, {
+  foreignKey: {
+    name: 'user_id', // 외래 키 이름은 user_id
+    allowNull: false // user_id 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE' // User가 삭제되면 연결된 모든 Post도 함께 삭제됨
+});
+
+PostModel.belongsTo(UserModel, {
+  foreignKey: {
+    name: 'user_id', // 외래 키 이름은 user_id
+    allowNull: false // user_id 외래 키는 NOT NULL로 설정
+  }
+});
+
+
+// users - likes (id, post_id)
+UserModel.hasMany(LikeModel, {
+  foreignKey: {
+    name: 'user_id', // 외래 키 이름은 user_id
+    allowNull: false // user_id 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE' // User가 삭제되면 연결된 모든 Like도 함께 삭제됨
+});
+
+PostModel.hasMany(LikeModel, {
+  foreignKey: {
+    name: 'post_id', // 외래 키 이름은 post_id
+    allowNull: false // post_id 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE' // Post가 삭제되면 연결된 모든 Like도 함께 삭제됨
+});
+
+LikeModel.belongsTo(UserModel, {
+  foreignKey: {
+    name: 'user_id', // 외래 키 이름은 user_id
+    allowNull: false // user_id 외래 키는 NOT NULL로 설정
+  }
+});
+
+LikeModel.belongsTo(PostModel, {
+  foreignKey: {
+    name: 'post_id', // 외래 키 이름은 post_id
+    allowNull: false // post_id 외래 키는 NOT NULL로 설정
+  }
+});
+
+
+// users - comments (id, post_id)
+UserModel.hasMany(CommentModel, {
+  foreignKey: {
+    name: 'userId', // 외래 키 이름은 userId
+    allowNull: false // userId 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE' // User가 삭제되면 연결된 모든 Comment도 함께 삭제됨
+});
+
+PostModel.hasMany(CommentModel, {
+  foreignKey: {
+    name: 'postId', // 외래 키 이름은 postId
+    allowNull: false // postId 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE' // Post가 삭제되면 연결된 모든 Comment도 함께 삭제됨
+});
+
+CommentModel.belongsTo(UserModel, {
+  foreignKey: {
+    name: 'userId', // 외래 키 이름은 userId
+    allowNull: false // userId 외래 키는 NOT NULL로 설정
+  }
+});
+
+CommentModel.belongsTo(PostModel, {
+  foreignKey: {
+    name: 'postId', // 외래 키 이름은 postId
+    allowNull: false // postId 외래 키는 NOT NULL로 설정
+  }
+});
+// 직접 추가한 부분----------------------------------------------------------
+
+
 // db 객체에 각 모델 및 Sequelize 설정 추가
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
