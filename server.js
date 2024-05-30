@@ -20,19 +20,7 @@ app.use('/api', require('./routers/profileRoute'));
 app.use("/api", require("./routers/loginRoute"))
 app.use('/api/survey', require("./routers/surveyRoute"))
 
-<<<<<<< HEAD
-=======
-// app.get('/', async (req, res) => {
-//     try {
-//         const connection = await conn;
-//         const rows = await connection.query('SHOW TABLES');
-//         res.send(`Database connection successful: ${rows}`);
-//     } catch (err) {
-//         res.status(500).send(`Database connection failed: ${err.message}`);
-//     }
-// })
 
->>>>>>> develop
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
