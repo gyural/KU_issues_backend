@@ -47,8 +47,4 @@ class Post extends Model {
     }
 }
 
-<<<<<<< HEAD
 module.exports = Post;
-=======
-module.exports = Post;
->>>>>>> develop
