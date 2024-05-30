@@ -12,20 +12,13 @@ class CommentModel extends Sequelize.Model {
       // 댓글 작성자 학번 (외래 키)
       userId: {
         type: DataTypes.STRING,
-        allowNull: false,
-        references: {
-          model: 'UserModel',
-          key: 'id'
+        allowNull: false
         }
-      },
+      ,
       // 게시글 pk (외래 키)
       postId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'Post',
-          key: 'id'
-        }
+        allowNull: false
       },
       // 댓글 내용, 최대 50글자
       content: {
