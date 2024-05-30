@@ -6,6 +6,7 @@ const {
   renderCreatePost,
   createPost,
   getPostDetail,
+  addComment,
   likePost
 } = require("../controllers/postController");
 
@@ -20,6 +21,9 @@ router.post("/create", asyncHandler(createPost));
 
 // 게시글 상세 조회
 router.get("/:post_id", asyncHandler(getPostDetail));
+
+// 댓글 추가
+router.post("/:post_id/comment", asyncHandler(addComment));
 
 // 좋아요 버튼이 눌렸을 때
 router.post("/:post_id/like", asyncHandler(likePost));

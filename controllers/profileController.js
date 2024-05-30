@@ -5,7 +5,9 @@ const bcrypt = require("bcrypt");
 // GET /api/profile/:id
 const getProfile = asyncHandler(async (req, res) => {
     const id = req.params.id;
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(id, {
+        attributes: { exclude: ['password', 'jwt'] }
+    });
     if (!user) {
         res.status(404).send('User not found');
     } else {
