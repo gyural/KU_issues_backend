@@ -8,8 +8,8 @@ const SurveyAns = require('./survey/surveyAns')
 const UserModel = require("./user/userModel");
 const PostModel = require("./post/postModel"); 
 const LikeModel = require("./post/likeModel"); 
-const CommentModel = require("./comment/commentModel");
 const VoteModel = require("./post/voteModel");
+const CommentModel = require("./comment/commentModel");
 
 const db = {}
 const sequelize = new Sequelize('project', 'user', '1234', {
@@ -26,33 +26,11 @@ SurveyAns.init(sequelize);
 UserModel.init(sequelize);
 PostModel.init(sequelize); 
 LikeModel.init(sequelize);
-VoteModel.init(sequelize);
+VoteModel.init(sequelize); // 추가
 CommentModel.init(sequelize);
 
+
 // 외래 키 관계 설정
-
-
-UserModel.associate = (models) => {
-  UserModel.hasMany(models.CommentModel, { foreignKey: 'userId', onDelete: 'CASCADE' });
-  UserModel.hasMany(models.VoteModel, { foreignKey: 'userId', onDelete: 'CASCADE' });
-};
-
-PostModel.associate = (models) => {
-  PostModel.hasMany(models.CommentModel, { foreignKey: 'postId', onDelete: 'CASCADE' });
-  PostModel.hasMany(models.VoteModel, { foreignKey: 'postId', onDelete: 'CASCADE' });
-};
-
-CommentModel.associate = (models) => {
-  CommentModel.belongsTo(models.UserModel, { foreignKey: 'userId', onDelete: 'CASCADE' });
-  CommentModel.belongsTo(models.PostModel, { foreignKey: 'postId', onDelete: 'CASCADE' });
-};
-
-VoteModel.associate = (models) => {
-  VoteModel.belongsTo(models.UserModel, { foreignKey: 'userId', onDelete: 'CASCADE' });
-  VoteModel.belongsTo(models.PostModel, { foreignKey: 'postId', onDelete: 'CASCADE' });
-};
-
-
 SurveyModel.hasMany(QuestionModel, {
   foreignKey: {
     name: 'surveyID',
@@ -123,6 +101,6 @@ db.SurveyAns = SurveyAns;
 db.UserModel = UserModel;
 db.PostModel = PostModel; 
 db.VoteModel= VoteModel; // 추가
-db.CommentModel = CommentModel;
+db.CommentModel= this.CommentModel;
 
 module.exports = db;

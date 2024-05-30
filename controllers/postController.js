@@ -1,6 +1,7 @@
 const Post = require("../models/post/postModel");
 const Like = require("../models/post/likeModel");
 const Vote = require("../models/post/voteModel");
+const Comment = require("../models/comment/commentModel");
 
 /**
  * 모든 게시판 내용 가져오기
@@ -53,6 +54,7 @@ const createPost = async (req, res) => {
 const getPostDetail = async (req, res) => {
   const post = await Post.findByPk(req.params.post_id);
   const likesCount = await Like.count({ where: { post_id: req.params.post_id } });
+  const comments = await Comment.findAll({ where: { postId: req.params.post_id } });
 
   if (post) {
     let upvotes = 0;
@@ -64,9 +66,31 @@ const getPostDetail = async (req, res) => {
       upvotes = await Vote.count({ where: { post_id: req.params.post_id, vote_type: "upvote" } });
       downvotes = await Vote.count({ where: { post_id: req.params.post_id, vote_type: "downvote" } });
     }
-    res.render("showPostDetail", { post, likesCount, upvotes, downvotes });
+    res.render("showPostDetail", { post, likesCount, upvotes, downvotes, comments });
   } else {
     res.status(404).send("Post not found");
+  }
+};
+
+/**
+ * 댓글 추가
+ * POST /api/posts/:post_id/comment
+ */
+const addComment = async (req, res) => {
+  const postId = req.params.post_id;
+  const { content } = req.body;
+  const userId = 2; // 실제 로그인된 사용자 ID로 대체할 것
+
+  try {
+    await Comment.create({
+      userId: userId,
+      postId: postId,
+      content: content
+    });
+    res.redirect(`/api/posts/${postId}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("An error occurred while adding the comment.");
   }
 };
 
@@ -76,7 +100,7 @@ const getPostDetail = async (req, res) => {
  */
 const likePost = async (req, res) => {
   const postId = req.params.post_id;
-  const userId = 1; // 실제 로그인된 사용자 ID로 대체할 것
+  const userId = 2; // 실제 로그인된 사용자 ID로 대체할 것
 
   try {
     const [like, created] = await Like.findOrCreate({
@@ -100,5 +124,6 @@ module.exports = {
   renderCreatePost,
   createPost,
   getPostDetail,
+  addComment,
   likePost
 };

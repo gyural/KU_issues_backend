@@ -20,6 +20,18 @@
     <p>Vote content: <%= post.vote_content %></p>
     <p>찬성 <%= upvotes %> 반대 <%= downvotes %></p>
     
+    <h2>Comments</h2>
+    <ul>
+        <% comments.forEach(comment => { %>
+            <li><strong>User ID <%= comment.userId %>:</strong> <%= comment.content %></li>
+        <% }) %>
+    </ul>
+
+    <form action="/api/posts/<%= post.post_id %>/comment" method="POST"> <!-- 댓글 추가 -->
+        <textarea name="content" rows="4" cols="50" placeholder="Add a comment"></textarea>
+        <button type="submit">Add Comment</button>
+    </form>
+
     <a href="/api/posts">Back to All Posts</a>
 </body>
 </html>
