@@ -7,11 +7,7 @@ const app = express();
 const port = 3000;
 
 sequelize
-<<<<<<< HEAD
-.sync({force: false})
-=======
 .sync({ force: false })
->>>>>>> bc419432038e17cc4838e763b89b0a2151b2c6f0
 .then(()=>{
     console.log('데이터베이스 연결 성공')
 }).catch(err=>{
