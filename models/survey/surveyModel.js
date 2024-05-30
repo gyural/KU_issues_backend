@@ -10,7 +10,7 @@ class SurveyModel extends Sequelize.Model{
         autoIncrement: true
       },
       author:{
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
       title:{

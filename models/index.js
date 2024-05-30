@@ -1,8 +1,4 @@
-/**
- * Sequelize를 사용하여 DB연결을 설정하고, 각 모델을 초기화하고 관계를 설정
- */
-
-const {Sequelize} = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 // 모델 모듈
 const SurveyModel = require('./survey/surveyModel')
@@ -21,9 +17,7 @@ const sequelize = new Sequelize('project', 'user', '1234', {
   logging: false // 쿼리 로깅 비활성화
 });
 
-
-
-// Model 초기화
+// SurveyModel들초기화
 SurveyModel.init(sequelize);
 QuestionModel.init(sequelize);
 SurveyRes.init(sequelize);
@@ -34,29 +28,66 @@ LikeModel.init(sequelize);
 VoteModel.init(sequelize); // 추가
 
 
-// 관계 설정
+// 외래 키 관계 설정
 SurveyModel.hasMany(QuestionModel, {
-  foreignKey: 'surveyModelId',
+  foreignKey: {
+    name: 'surveyID',
+    allowNull: false // Survey 외래 키는 NOT NULL로 설정
+  },
   onDelete: 'CASCADE'
 });
-QuestionModel.belongsTo(SurveyModel, {
-  foreignKey: 'surveyModelId'
-});
-QuestionModel.hasMany(SurveyRes, {
-  foreignKey: 'questionId',
-  onDelete: 'CASCADE'
-})
-SurveyRes.belongsTo(QuestionModel,{
-  foreignKey: 'questionId'
-})
-SurveyRes.hasMany(SurveyAns,{
-  foreignKey: 'surveyResId',
-  onDelete: 'CASCADE'
-})
-SurveyAns.belongsTo(SurveyRes,{
-  foreignKey: 'surveyResId'
-})
 
+QuestionModel.belongsTo(SurveyModel, {
+  foreignKey: {
+    name: 'surveyID',
+    allowNull: false // Survey 외래 키는 NOT NULL로 설정
+  }
+});
+
+SurveyModel.hasMany(SurveyRes, {
+  foreignKey: {
+    name: 'surveyID',
+    allowNull: false // Survey 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE'
+});
+
+SurveyRes.belongsTo(SurveyModel, {
+  foreignKey: {
+    name: 'surveyID',
+    allowNull: false // Survey 외래 키는 NOT NULL로 설정
+  }
+});
+
+SurveyRes.hasMany(SurveyAns, {
+  foreignKey: {
+    name: 'surveyResId',
+    allowNull: false // SurveyRes 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE'
+});
+
+SurveyAns.belongsTo(SurveyRes, {
+  foreignKey: {
+    name: 'surveyResId',
+    allowNull: false // SurveyRes 외래 키는 NOT NULL로 설정
+  }
+});
+
+QuestionModel.hasMany(SurveyAns, {
+  foreignKey: {
+    name: 'questionID',
+    allowNull: false // Question 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE'
+});
+
+SurveyAns.belongsTo(QuestionModel, {
+  foreignKey: {
+    name: 'questionID',
+    allowNull: false // Question 외래 키는 NOT NULL로 설정
+  }
+});
 
 // db 객체에 각 모델 및 Sequelize 설정 추가
 db.sequelize = sequelize;

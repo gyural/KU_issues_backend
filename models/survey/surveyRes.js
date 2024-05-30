@@ -10,7 +10,7 @@ class SurveyRes extends Sequelize.Model{
         autoIncrement: true
       },
       respondent:{
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
     },
