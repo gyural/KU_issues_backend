@@ -2,10 +2,6 @@ const asyncHandler = require("express-async-handler");
 const User = require('../models/user/userModel');
 const bcrypt = require("bcrypt");
 
-// require('dotenv').config();
-// const jwt = require('jsonwebtoken');
-// const jwtSecret = process.env.JWT_SECRET;
-
 // GET /api/profile/:id
 const getProfile = asyncHandler(async (req, res) => {
     const id = req.params.id;

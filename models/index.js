@@ -23,35 +23,77 @@ SurveyAns.init(sequelize)
 // UserModel 초기화
 UserModel.init(sequelize)
 
-// 관계 설정
+
+// 외래 키 관계 설정
 SurveyModel.hasMany(QuestionModel, {
-  foreignKey: 'surveyModelId',
+  foreignKey: {
+    name: 'surveyID',
+    allowNull: false // Survey 외래 키는 NOT NULL로 설정
+  },
   onDelete: 'CASCADE'
 });
+
 QuestionModel.belongsTo(SurveyModel, {
-  foreignKey: 'surveyModelId'
+  foreignKey: {
+    name: 'surveyID',
+    allowNull: false // Survey 외래 키는 NOT NULL로 설정
+  }
 });
-QuestionModel.hasMany(SurveyRes, {
-  foreignKey: 'questionId',
+
+SurveyModel.hasMany(SurveyRes, {
+  foreignKey: {
+    name: 'surveyID',
+    allowNull: false // Survey 외래 키는 NOT NULL로 설정
+  },
   onDelete: 'CASCADE'
-})
-SurveyRes.belongsTo(QuestionModel,{
-  foreignKey: 'questionId'
-})
-SurveyRes.hasMany(SurveyAns,{
-  foreignKey: 'surveyResId',
+});
+
+SurveyRes.belongsTo(SurveyModel, {
+  foreignKey: {
+    name: 'surveyID',
+    allowNull: false // Survey 외래 키는 NOT NULL로 설정
+  }
+});
+
+SurveyRes.hasMany(SurveyAns, {
+  foreignKey: {
+    name: 'surveyResId',
+    allowNull: false // SurveyRes 외래 키는 NOT NULL로 설정
+  },
   onDelete: 'CASCADE'
-})
-SurveyAns.belongsTo(SurveyRes,{
-  foreignKey: 'surveyResId'
-})
+});
+
+SurveyAns.belongsTo(SurveyRes, {
+  foreignKey: {
+    name: 'surveyResId',
+    allowNull: false // SurveyRes 외래 키는 NOT NULL로 설정
+  }
+});
+
+QuestionModel.hasMany(SurveyAns, {
+  foreignKey: {
+    name: 'questionID',
+    allowNull: false // Question 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE'
+});
+
+SurveyAns.belongsTo(QuestionModel, {
+  foreignKey: {
+    name: 'questionID',
+    allowNull: false // Question 외래 키는 NOT NULL로 설정
+  }
+});
 
 db.sequelize = sequelize;
 db.Sequelize = Sequelize
+
+// Survey Models
 db.SurveyModel = SurveyModel
 db.QuestionModel = QuestionModel
 db.SurveyRes = SurveyRes
 db.SurveyAns = SurveyAns
+// User Models
 db.UserModel = UserModel
 
 module.exports = db;
