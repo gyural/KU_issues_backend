@@ -20,6 +20,8 @@ app.use('/api', require('./routers/profileRoute'));
 app.use("/api", require("./routers/loginRoute"))
 app.use('/api/survey', require("./routers/surveyRoute"))
 
+<<<<<<< HEAD
+=======
 // app.get('/', async (req, res) => {
 //     try {
 //         const connection = await conn;
@@ -30,6 +32,7 @@ app.use('/api/survey', require("./routers/surveyRoute"))
 //     }
 // })
 
+>>>>>>> develop
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
 });
