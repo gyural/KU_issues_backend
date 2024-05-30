@@ -75,4 +75,12 @@ const loginUser = async(req, res) => {
     res.status(201).json(token)
 }
 
-module.exports = { createUser, nicknameCheck, loginUser }
+/**
+ * logout
+ */
+const logoutUser = (req, res) => {
+    res.clearCookie("token");
+    res.send("로그아웃 완료")
+}
+
+module.exports = { createUser, nicknameCheck, loginUser, logoutUser }
