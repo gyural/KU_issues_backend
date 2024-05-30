@@ -1,4 +1,4 @@
-const Vote = require("../models/vote/voteModel");
+const Vote = require("../models/post/voteModel");
 
 /**
  * 투표 응답 기록
