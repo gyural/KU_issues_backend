@@ -83,6 +83,7 @@ const createQuestions = async (questionList, surveyId) => {
       const q = await questionModel.create({ 
         question: question.question, 
         questionType: question.questionType, 
+        answerList: question.answerList,
         surveyID: surveyId });
       createdQuestions.push(q);
     }));
@@ -197,5 +198,37 @@ const getSurveyAnswer = async (req, res)=>{
   }
 
 }
+/**
+ * GET
+ * survey:id/answers
+ * @param {*} req 
+ * @param {*} res 
+ */
+const getAnswerCount = async (req, res) =>{
+  const {id} = req.params
+  
+  try {
+    let questionList = await questionModel.findAll({ where: { surveyID: id } })
+    
+    questionList = questionList.map(el => el.dataValues);
+    const questionIds = questionList.map(el=>{
+      return el.id
+    }) 
+  
+    for (const [idx, el] of questionList.entries()) {
+      el.totalAnswers = []
+      const answers = await answerModel.findAll({ where: { questionID: questionIds[idx] } });
+      
+      answers.forEach(element => {
+        el.totalAnswers.push(element.answer)
+      });
+    }
+  
+    return res.status(200).json(questionList)
+    
+  } catch (error) {
+    throw(error)
+  }
+}
 
-module.exports = {createSurveyDoc, getSurveyDoc, getSurveyOne, createResponse, getSurveyAnswer}
+module.exports = {createSurveyDoc, getSurveyDoc, getSurveyOne, createResponse, getSurveyAnswer,getAnswerCount}
