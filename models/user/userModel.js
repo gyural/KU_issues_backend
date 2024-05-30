@@ -23,6 +23,11 @@ class User extends Sequelize.Model {
             password:{
                 type: DataTypes.STRING,
                 allowNull: false,
+            },
+            jwt:{
+                type: DataTypes.STRING,
+                allowNull: true,
+                defaultValue: ''
             }
         }, {
             sequelize,
