@@ -17,6 +17,11 @@ class QuestionModel extends Sequelize.Model{
       questionType:{
         type: DataTypes.STRING,
         allowNull: false
+      },
+      answerList: {
+        type: DataTypes.JSON,  // JSON 타입 사용
+        allowNull: true,
+        defaultValue: []
       }
     },
     {
