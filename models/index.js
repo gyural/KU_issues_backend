@@ -8,8 +8,8 @@ const SurveyAns = require('./survey/surveyAns')
 const UserModel = require("./user/userModel");
 const PostModel = require("./post/postModel"); 
 const LikeModel = require("./post/likeModel"); 
-const VoteModel = require("./vote/voteModel");
 const CommentModel = require("./comment/commentModel");
+const VoteModel = require("./post/voteModel");
 
 const db = {}
 const sequelize = new Sequelize('project', 'user', '1234', {

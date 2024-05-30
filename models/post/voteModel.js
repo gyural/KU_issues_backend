@@ -1,7 +1,6 @@
-// models/likeModel.js
 const { DataTypes, Model } = require("sequelize");
 
-class Like extends Model {
+class Vote extends Model {
     static init(sequelize) {
         return super.init(
             {
@@ -10,31 +9,31 @@ class Like extends Model {
                     primaryKey: true,
                     autoIncrement: true,
                 },
-                user_id: {
-                    type: DataTypes.INTEGER,
-                    allowNull: false,
-                },
                 post_id: {
                     type: DataTypes.INTEGER,
                     allowNull: false,
                 },
-                created_at: {
-                    type: DataTypes.DATE,
-                    defaultValue: DataTypes.NOW,
+                user_id: {
+                    type: DataTypes.INTEGER,
+                    allowNull: false,
+                },
+                vote_type: {
+                    type: DataTypes.ENUM('upvote', 'downvote'), // 두 가지 타입만 입력받음
+                    allowNull: false,
                 },
             },
             {
                 sequelize,
-                modelName: "Like",
-                tableName: "likes",
-                timestamps: false,
-                underscored: false,
+                modelName: "Vote",
+                tableName: "votes",
+                timestamps: true,
+                underscored: true,
                 charset: "utf8",
                 collate: "utf8_general_ci",
                 indexes: [
                     {
                         unique: true,
-                        fields: ['user_id', 'post_id']
+                        fields: ['post_id', 'user_id']
                     }
                 ]
             }
@@ -42,8 +41,4 @@ class Like extends Model {
     }
 }
 
-<<<<<<< HEAD
-module.exports = Like;
-=======
-module.exports = Like;
->>>>>>> develop
+module.exports = Vote;

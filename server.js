@@ -20,6 +20,7 @@ app.use("/api", require("./routers/loginRoute"))
 app.use('/api/survey', require("./routers/surveyRoute"))
 app.use('/api/comments', require('./routers/commentRoute'));
 app.use('/api/votes', require('./routers/voteRoute'));
+app.use('/api/posts', require)
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);

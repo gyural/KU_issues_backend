@@ -1,6 +1,6 @@
 const Post = require("../models/post/postModel");
 const Like = require("../models/post/likeModel");
-const Vote = require("../models/vote/voteModel");
+const Vote = require("../models/post/voteModel");
 
 /**
  * 모든 게시판 내용 가져오기
