@@ -11,5 +11,4 @@ router.get('/:id', getSurveyOne)
 router.post('/:id/answer', createResponse)
 router.get('/:id/answer', getSurveyAnswer)
 
-
 module.exports = router
