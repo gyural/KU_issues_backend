@@ -44,8 +44,8 @@ router.post("/create", asyncHandler(async(req, res)=>{
 
 
         console.log("데이터베이스에 값 삽입 완료");
-        // res.redirect("/api/posts/");
-        res.status(200).send("게시물 생성 성공");
+        res.redirect("/api/posts/");
+        // res.status(200).send("게시물 생성 성공");
     }catch(error){
         console.log("게시물 생성 중 에러 발생", error);
         res.status(500).send("게시물 생성 중 에러가 발생");
