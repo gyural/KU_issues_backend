@@ -2,8 +2,10 @@ const express = require("express");
 const app = express()
 const {sequelize} = require("./models/index")
 const surveyRouter = require("./routers/surveyRoute")
+const postRouter= require("./routers/postRoute");
+const commentRouter = require("./routers/commentRoute");
+const voteRouter = require("./routers/voteRoute");
 
-console.log("here")
 sequelize
 .sync({force: true})
 .then(()=>{
@@ -12,10 +14,16 @@ sequelize
   console.log(err)
 })
 
+app.set('view engine', 'ejs');
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true })); // URL-encoded 데이터 파싱
 
-app.use('/survey', surveyRouter)
+// 라우터 설정
+app.use('/survey', surveyRouter) // survey로 들어오는 요청을 surveyRouter에서 처리
+app.use('/api/posts', postRouter);
 
+app.use('/api/posts', postRouter);
 
 
 app.listen(3000, ()=>{
