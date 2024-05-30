@@ -42,8 +42,4 @@ class Like extends Model {
     }
 }
 
-<<<<<<< HEAD
 module.exports = Like;
-=======
-module.exports = Like;
->>>>>>> develop
