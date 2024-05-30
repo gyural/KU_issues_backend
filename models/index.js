@@ -7,6 +7,9 @@ const SurveyRes = require('./survey/surveyRes')
 const SurveyAns = require('./survey/surveyAns')
 const UserModel = require("./user/userModel");
 const CommentModel = require("./comment/commentModel")
+const PostModel = require('./post/postModel')
+const VoteModel = require('./vote/voteModel')
+
 
 const db = {}
 const sequelize = new Sequelize('project', 'user', '1234', {
@@ -24,9 +27,30 @@ SurveyAns.init(sequelize)
 // UserModel 초기화
 UserModel.init(sequelize)
 
-
+CommentModel.init(sequelize);
+VoteModelModel.init(sequelize);
 
 // 외래 키 관계 설정
+
+
+CommentModel.belongsTo(UserModel, {
+  foreignKey: {
+    name: 'userId',
+    allowNull: false
+  },
+  onDelete: 'CASCADE'
+});
+
+CommentModel.belongsTo(PostModel, {
+  foreignKey: {
+    name: 'postId',
+    allowNull: false
+  },
+  onDelete: 'CASCADE'
+});
+
+
+
 SurveyModel.hasMany(QuestionModel, {
   foreignKey: {
     name: 'surveyID',
@@ -97,5 +121,8 @@ db.SurveyRes = SurveyRes
 db.SurveyAns = SurveyAns
 // User Models
 db.UserModel = UserModel
+
+db.CommentModel = CommentModel
+db.VoteModel = VoteModel
 
 module.exports = db;
