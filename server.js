@@ -1,6 +1,6 @@
 require('dotenv').config();
 const express = require('express');
-
+const cookieParser = require('cookie-parser');
 const { sequelize } = require("./models/index");
 
 const app = express();
@@ -15,6 +15,7 @@ sequelize
 })
 
 app.use(express.json())
+app.use(cookieParser());
 app.use('/api', require('./routers/profileRoute'));
 app.use("/api", require("./routers/loginRoute"))
 app.use('/api/survey', require("./routers/surveyRoute"))
