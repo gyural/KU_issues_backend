@@ -17,12 +17,12 @@ const createUser = async(req, res) => {
     const { id, name, nickname, grade, password, passwordCheck } = req.body
     if (password === passwordCheck) {
         const hashedPassword = await bcrypt.hash(password, 10)
-        result = await User.create({
+        const result = await User.create({
             id: id,
             name: name,
             nickname: nickname,
             grade: grade,
-            password: hashedPassword,
+            password: hashedPassword
         })
         res.status(201).json(result)
     } else {
@@ -65,9 +65,22 @@ const loginUser = async(req, res) => {
     }
 
     const token = jwt.sign({ id: check._id }, jwtSecret);
+    User.update({
+        jwt: token
+    }, {
+        where: { id: id }
+    })
     res.cookie("token", token, { httpOnly: true });
 
     res.status(201).json(token)
 }
 
-module.exports = { createUser, nicknameCheck, loginUser }
+/**
+ * logout
+ */
+const logoutUser = (req, res) => {
+    res.clearCookie("token");
+    res.send("로그아웃 완료")
+}
+
+module.exports = { createUser, nicknameCheck, loginUser, logoutUser }
