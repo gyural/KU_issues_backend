@@ -4,8 +4,8 @@ const { getProfile, updateProfile, deleteProfile } = require('../controllers/pro
 
 const verifyToken = require('../middleware/token');
 
-router.get('/profile/:id', verifyToken, getProfile);
-router.put('/profile/:id/edit', verifyToken, updateProfile, verifyToken);
-router.delete('/profile/:id', verifyToken, deleteProfile);
+router.get('/profile', verifyToken, getProfile);
+router.put('/profile/edit', verifyToken, updateProfile);
+router.delete('/profile', verifyToken, deleteProfile);
 
 module.exports = router;
