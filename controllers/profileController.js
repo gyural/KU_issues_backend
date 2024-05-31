@@ -2,9 +2,9 @@ const asyncHandler = require("express-async-handler");
 const User = require('../models/user/userModel');
 const bcrypt = require("bcrypt");
 
-// GET /api/profile/:id
+// GET /api/profile
 const getProfile = asyncHandler(async (req, res) => {
-    const id = req.params.id;
+    const id = req.user.id;
     const user = await User.findByPk(id, {
         attributes: { exclude: ['password', 'jwt'] }
     });
@@ -15,9 +15,9 @@ const getProfile = asyncHandler(async (req, res) => {
     }
 });
 
-// PUT /api/profile/:id/edit
+// PUT /api/profile/edit
 const updateProfile = asyncHandler(async (req, res) => {
-    const id = req.params.id;
+    const id = req.user.id;
     const { grade, name, nickname, password } = req.body;
     const user = await User.findByPk(id);
     if (!user) {
@@ -35,9 +35,9 @@ const updateProfile = asyncHandler(async (req, res) => {
     }
 });
 
-// DELETE /api/profile/:id
+// DELETE /api/profile
 const deleteProfile = asyncHandler(async (req, res) => {
-    const id = req.params.id;
+    const id = req.user.id;
     const user = await User.findByPk(id);
     if (!user) {
         res.status(404).send('User not found');

@@ -77,17 +77,20 @@ const loginUser = async(req, res) => {
 
     const isMatch = await bcrypt.compare(password, check.password);
     if (!isMatch) {
-        return res.json({ message: "비밀번호가 일치하지 않습니다." });
+        return res.status(401).json({ message: "비밀번호가 일치하지 않습니다." });
     }
 
-    const token = jwt.sign({ id: check.id }, jwtSecret);
-    User.update({
-        jwt: token
-    }, {
-        where: { id: id }
-    })
-    res.cookie("token", token, { httpOnly: true });
+    const token = jwt.sign(
+        { id: check.id },
+        jwtSecret,
+        {expiresIn: "1h"});
 
+    await User.update(
+        { jwt: token },
+        { where: { id: id } }
+    );
+
+    res.cookie("token", token, { httpOnly: true });
     res.status(201).json(token)
 }
 
