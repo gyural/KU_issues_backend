@@ -35,9 +35,10 @@ const getCommentsByPost = async (req, res) => {
  * @param {*} res
  */
 const createComment = async (req, res) => {
-    const { content } = req.body;
+    //const { content } = req.body;
+    const { user_id, content } = req.body;
     const { post_id } = req.params;
-    const userId = 1; //
+    //const userId = 1; //
 
     if (!content || content.length > 50) {
         return res.status(400).json({ message: "댓글 내용은 필수이며 최대 50자까지 작성 가능합니다." });
