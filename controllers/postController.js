@@ -26,6 +26,7 @@ const renderCreatePost = async (req, res) => {
  */
 const createPost = async (req, res) => {
   try {
+    const id = req.params.id; // 쿠키로부터 값 가져오는 부분
     const { title, body, vote_content, post_tag } = req.body;
     console.log(title, body, vote_content, post_tag);
     console.log(req.body.post_id);
@@ -36,7 +37,8 @@ const createPost = async (req, res) => {
       body: body,
       vote_content: vote_content,
       post_tag: post_tag,
-      user_id: 1 // 임시로 설정(로그인 된 id를 받아와 자동으로 넣도록 후에 수정할 것)
+      user_id: id // 쿠키로부터 가져온 id 넣기
+      // user_id: 1 // 임시로 설정(로그인 된 id를 받아와 자동으로 넣도록 후에 수정할 것)
     });
 
     console.log("데이터베이스에 값 삽입 완료");
@@ -66,20 +68,24 @@ const getPostDetail = async (req, res) => {
       upvotes = await Vote.count({ where: { post_id: req.params.post_id, vote_type: "upvote" } });
       downvotes = await Vote.count({ where: { post_id: req.params.post_id, vote_type: "downvote" } });
     }
-    res.render("showPostDetail", { post, likesCount, upvotes, downvotes, comments });
+
+    res.status(200).send("showPostDetail Success");
+    // res.render("showPostDetail", { post, likesCount, upvotes, downvotes, comments });
   } else {
     res.status(404).send("Post not found");
   }
 };
 
 /**
- * 댓글 추가
+ * 댓글 추가 <!-- 서연님이 작성한 코드 활용 --> 사용되지 않는 코드
  * POST /api/posts/:post_id/comment
  */
 const addComment = async (req, res) => {
+  const id = req.params.id; // 쿠키로부터 값 가져옴
   const postId = req.params.post_id;
   const { content } = req.body;
-  const userId = 100; // 실제 로그인된 사용자 ID로 대체할 것
+  // const userId = 100; // 실제 로그인된 사용자 ID로 대체할 것
+  const userId= id // 쿠키로부터 받아온 값을 사용
 
   try {
     await Comment.create({
@@ -87,7 +93,9 @@ const addComment = async (req, res) => {
       postId: postId,
       content: content
     });
-    res.redirect(`/api/posts/${postId}`);
+
+    res.status(200).send("comment success");
+    // res.redirect(`/api/posts/${postId}`);
   } catch (err) {
     console.error(err);
     res.status(500).send("An error occurred while adding the comment.");
@@ -99,8 +107,10 @@ const addComment = async (req, res) => {
  * POST /api/posts/:post_id/like
  */
 const likePost = async (req, res) => {
+  const id = req.params.id; // 쿠키로부터 받아온 값
   const postId = req.params.post_id;
-  const userId = 2; // 실제 로그인된 사용자 ID로 대체할 것
+  // const userId = 2; // 실제 로그인된 사용자 ID로 대체할 것
+  const userId= id // 쿠키에서 받아온 값 사용
 
   try {
     const [like, created] = await Like.findOrCreate({
@@ -112,7 +122,8 @@ const likePost = async (req, res) => {
       return res.status(400).send("You have already liked this post.");
     }
 
-    res.redirect(`/api/posts/${postId}`);
+    res.status(200).send("like success");
+    // res.redirect(`/api/posts/${postId}`);
   } catch (err) {
     console.error(err);
     res.status(500).send("An error occurred while liking the post.");
