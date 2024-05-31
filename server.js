@@ -4,9 +4,10 @@ const cookieParser = require('cookie-parser');
 const { sequelize } = require("./models/index");
 const surveyRouter = require("./routers/surveyRoute");
 const postRouter= require("./routers/postRoute");  
+const cors = require('cors');
 
 const app = express();
-const port = 3000;
+const port = 8080;
 
 sequelize
 .sync({ force: false })
@@ -23,7 +24,12 @@ app.set('view engine', 'ejs');
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // URL-encoded 데이터 파싱
 
+const corsOptions = {
+  origin: 'http://localhost:3000', // React 앱의 주소
+  credentials: true, // 쿠키를 포함한 요청을 허용
+};
 
+app.use(cors(corsOptions));
 app.use(express.json())
 app.use(cookieParser());
 app.use('/api', require('./routers/profileRoute'));
