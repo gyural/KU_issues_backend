@@ -5,7 +5,7 @@ const jwtSecret = process.env.JWT_SECRET;
 const verifyToken = (req, res, next) => {
     const token = req.cookies.token || req.headers['authorization'];
     if (!token) {
-        return res.status(401).json({ message: "Access Denied. No Token Provided." });
+        return res.status(401).json({ message: "Access Denied. No Token Provided. " });
     }
 
     try {
