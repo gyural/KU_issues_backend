@@ -174,6 +174,34 @@ CommentModel.belongsTo(PostModel, {
     allowNull: false // postId 외래 키는 NOT NULL로 설정
   }
 });
+
+// 나중에 추가한 부분
+// users - votes (id)
+UserModel.hasMany(VoteModel, {
+  foreignKey: {
+    name: 'user_id', // 외래 키 이름은 user_id
+    allowNull: false // user_id 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE' // User가 삭제되면 연결된 모든 Vote도 함께 삭제됨
+});
+
+VoteModel.belongsTo(UserModel, {
+  foreignKey: {
+    name: 'user_id', // 외래 키 이름은 user_id
+    allowNull: false // user_id 외래 키는 NOT NULL로 설정
+  }
+});
+
+// posts - votes (post_id)
+PostModel.hasMany(VoteModel, {
+  as: "votes",
+  onDelete: 'CASCADE' // Post가 삭제되면 연결된 모든 Vote도 함께 삭제됨
+});
+
+VoteModel.belongsTo(PostModel, {
+  as: 'post'
+});
+
 // 직접 추가한 부분----------------------------------------------------------
 
 
