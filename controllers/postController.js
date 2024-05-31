@@ -79,7 +79,7 @@ const getPostDetail = async (req, res) => {
 const addComment = async (req, res) => {
   const postId = req.params.post_id;
   const { content } = req.body;
-  const userId = 2; // 실제 로그인된 사용자 ID로 대체할 것
+  const userId = 100; // 실제 로그인된 사용자 ID로 대체할 것
 
   try {
     await Comment.create({
