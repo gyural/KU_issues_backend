@@ -71,7 +71,7 @@ const nicknameCheck = async(req, res) => {
 const loginUser = async(req, res) => {
     const { id, password } = req.body
     const check = await User.findOne({
-        attributes: ['password'],
+        attributes: ['id', 'password'],
         where: { id: id }
     })
 
@@ -80,7 +80,7 @@ const loginUser = async(req, res) => {
         return res.json({ message: "비밀번호가 일치하지 않습니다." });
     }
 
-    const token = jwt.sign({ id: check._id }, jwtSecret);
+    const token = jwt.sign({ id: check.id }, jwtSecret);
     User.update({
         jwt: token
     }, {
