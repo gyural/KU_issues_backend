@@ -4,7 +4,7 @@ class Post extends Model {
     static init(sequelize) {
         return super.init(
             {
-                post_id: {
+                id: {
                     type: DataTypes.INTEGER,
                     primaryKey: true,
                     autoIncrement: true,

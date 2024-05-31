@@ -2,13 +2,22 @@ const Post = require("../models/post/postModel");
 const Like = require("../models/post/likeModel");
 const Vote = require("../models/post/voteModel");
 const Comment = require("../models/comment/commentModel");
+const { VoteModel } = require("../models");
+// const { Sequelize } = require('sequelize');
 
 /**
  * 모든 게시판 내용 가져오기
  * GET /api/posts
  */
 const getAllPosts = async (req, res) => {
-  const data = await Post.findAll(); // DB에서 모든 데이터를 다 가져옴
+  const data = await Post.findAll({
+    include: [
+      {
+        model: Vote,
+        as: "votes"
+      }
+    ]
+  }); // DB에서 모든 데이터를 다 가져옴
   res.status(200).json(data);
   // res.render("showPost", { data });
 };
@@ -38,8 +47,8 @@ const createPost = async (req, res) => {
       body: body,
       vote_content: vote_content,
       post_tag: post_tag,
-      user_id: id // 쿠키로부터 가져온 id 넣기
-      // user_id: 1 // 임시로 설정(로그인 된 id를 받아와 자동으로 넣도록 후에 수정할 것)
+      // user_id: 3 // 쿠키로부터 가져온 id 넣기
+      user_id: 1 // 임시로 설정(로그인 된 id를 받아와 자동으로 넣도록 후에 수정할 것)
     });
 
     console.log("데이터베이스에 값 삽입 완료");
