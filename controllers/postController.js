@@ -9,7 +9,8 @@ const Comment = require("../models/comment/commentModel");
  */
 const getAllPosts = async (req, res) => {
   const data = await Post.findAll(); // DB에서 모든 데이터를 다 가져옴
-  res.render("showPost", { data });
+  res.status(200).json(data);
+  // res.render("showPost", { data });
 };
 
 /**
@@ -50,7 +51,7 @@ const createPost = async (req, res) => {
 };
 
 /**
- * 게시글 상세 조회
+ * 게시글 공감, 찬성, 반대 가져오기
  * GET api/posts/{post_id}
  */
 const getPostDetail = async (req, res) => {
@@ -68,8 +69,8 @@ const getPostDetail = async (req, res) => {
       upvotes = await Vote.count({ where: { post_id: req.params.post_id, vote_type: "upvote" } });
       downvotes = await Vote.count({ where: { post_id: req.params.post_id, vote_type: "downvote" } });
     }
-
-    res.status(200).send("showPostDetail Success");
+    console.log(upvotes, downvotes);
+    res.status(200).json({likesCount, upvotes, downvotes, comments});
     // res.render("showPostDetail", { post, likesCount, upvotes, downvotes, comments });
   } else {
     res.status(404).send("Post not found");
