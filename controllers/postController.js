@@ -1,6 +1,7 @@
 const Post = require("../models/post/postModel");
 const Like = require("../models/post/likeModel");
 const Vote = require("../models/post/voteModel");
+const User = require("../models/user/userModel");
 const Comment = require("../models/comment/commentModel");
 const { VoteModel } = require("../models");
 const { Sequelize } = require('sequelize');
@@ -20,6 +21,10 @@ const getAllPosts = async (req, res) => {
       {
         model: Like,
         as: "likes"
+      },
+      {
+        model: User,
+        as: "users"
       }
     ]
   }); // DB에서 모든 데이터를 다 가져옴
@@ -65,7 +70,7 @@ const createPost = async (req, res) => {
 };
 
 /**
- * 게시글 공감, 찬성, 반대 가져오기
+ * 모든 게시글 공감, 찬성, 반대 가져오기
  * GET api/posts/{post_id}
  */
 const getPostDetail = async (req, res) => {
