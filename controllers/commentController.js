@@ -48,7 +48,7 @@ const createComment = async (req, res) => {
     }
 
     try {
-        const user = await UserModel.findByPk(userId);
+        const user = await UserModel.findByPk(user_id);
         const post = await PostModel.findByPk(post_id);
 
         if (!user || !post) {
