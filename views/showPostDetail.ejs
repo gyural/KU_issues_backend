@@ -12,7 +12,7 @@
     <p>Created At: <%= post.created_at %></p>
     <p>Post Tag: <%= post.post_tag %></p> <!-- 수정된 부분: 게시글의 post_tag를 표시 -->
     
-    <form action="/api/posts/<%= post.post_id %>/like" method="POST"> <!-- 좋아요 누르기 -->
+    <form action="/api/posts/<%= post.id %>/like" method="GET"> <!-- 좋아요 누르기 -->
         <button type="submit">Like</button> 
     </form>
     <p>Likes: <%= likesCount %></p> <!-- 좋아요 개수 표시 -->

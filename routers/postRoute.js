@@ -26,6 +26,6 @@ router.get("/:post_id", asyncHandler(getPostDetail));
 router.post("/:post_id/comment", asyncHandler(addComment));
 
 // 좋아요 버튼이 눌렸을 때
-router.post("/:post_id/like", asyncHandler(likePost));
+router.get("/:post_id/like", asyncHandler(likePost));
 
 module.exports = router;

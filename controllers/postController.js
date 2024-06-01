@@ -1,6 +1,7 @@
 const Post = require("../models/post/postModel");
 const Like = require("../models/post/likeModel");
 const Vote = require("../models/post/voteModel");
+const User = require("../models/user/userModel");
 const Comment = require("../models/comment/commentModel");
 const { VoteModel } = require("../models");
 const { Sequelize } = require('sequelize');
@@ -20,6 +21,10 @@ const getAllPosts = async (req, res) => {
       {
         model: Like,
         as: "likes"
+      },
+      {
+        model: User,
+        as: "users"
       }
     ]
   }); // DB에서 모든 데이터를 다 가져옴
@@ -65,7 +70,7 @@ const createPost = async (req, res) => {
 };
 
 /**
- * 게시글 공감, 찬성, 반대 가져오기
+ * 모든 게시글 공감, 찬성, 반대 가져오기 --> 사용되지 않는 코드
  * GET api/posts/{post_id}
  */
 const getPostDetail = async (req, res) => {
@@ -122,10 +127,10 @@ const addComment = async (req, res) => {
  * POST /api/posts/:post_id/like
  */
 const likePost = async (req, res) => {
-  const id = req.params.id; // 쿠키로부터 받아온 값
+  // const id = req.params.id; // 쿠키로부터 받아온 값
   const postId = req.params.post_id;
-  // const userId = 2; // 실제 로그인된 사용자 ID로 대체할 것
-  const userId= id // 쿠키에서 받아온 값 사용
+  const userId = 2; // 실제 로그인된 사용자 ID로 대체할 것
+  // const userId= id // 쿠키에서 받아온 값 사용
 
   try {
     const [like, created] = await Like.findOrCreate({

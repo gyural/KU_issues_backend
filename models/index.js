@@ -97,6 +97,7 @@ SurveyAns.belongsTo(QuestionModel, {
 
 // users - posts (id)
 UserModel.hasMany(PostModel, {
+  as: "posts",
   foreignKey: {
     name: 'user_id', // 외래 키 이름은 user_id
     allowNull: false // user_id 외래 키는 NOT NULL로 설정
@@ -105,6 +106,7 @@ UserModel.hasMany(PostModel, {
 });
 
 PostModel.belongsTo(UserModel, {
+  as: "users",
   foreignKey: {
     name: 'user_id', // 외래 키 이름은 user_id
     allowNull: false // user_id 외래 키는 NOT NULL로 설정
