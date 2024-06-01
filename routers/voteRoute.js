@@ -9,6 +9,7 @@ const verifyToken = require('../middleware/token');
  * 투표 응답 기록
  * POST /api/votes/:post_id
  */
-router.post("/:post_id", asyncHandler(recordVote));
+router.post("/:post_id",verifyToken, asyncHandler(recordVote));
+//router.post("/:post_id", asyncHandler(recordVote));
 
 module.exports = router;
