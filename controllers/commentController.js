@@ -1,6 +1,7 @@
 const CommentModel = require("../models/comment/commentModel");
 const UserModel = require("../models/user/userModel");
 const PostModel = require("../models/post/postModel");
+const verifyToken= require("../middleware/token");
 
 /**
  * 특정 게시글의 모든 댓글 조회
