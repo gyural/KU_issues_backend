@@ -7,7 +7,7 @@ const Vote = require("../models/post/voteModel");
  */
 const recordVote = async (req, res) => {
     const { post_id } = req.params;
-    const id = req.user.id;
+    const user_id = req.user.id;
     const { vote_type } = req.body;
     //const { user_id, vote_type } = req.body;
     // const { post_id } = req.params;
