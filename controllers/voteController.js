@@ -7,7 +7,11 @@ const Vote = require("../models/post/voteModel");
  */
 const recordVote = async (req, res) => {
     const { post_id } = req.params;
-    const { user_id, vote_type } = req.body;
+    const id = req.user.id;
+    const { vote_type } = req.body;
+    //const { user_id, vote_type } = req.body;
+    // const { post_id } = req.params;
+    // const { user_id, vote_type } = req.body;
 
     try {
         // 새로운 투표 생성
