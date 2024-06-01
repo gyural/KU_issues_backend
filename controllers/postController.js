@@ -11,7 +11,6 @@ const { Sequelize } = require('sequelize');
  * GET /api/posts
  */
 const getAllPosts = async (req, res) => {
-  // const data= await Post.findAll();
   const data = await Post.findAll({
     include: [
       {
@@ -27,7 +26,7 @@ const getAllPosts = async (req, res) => {
         as: "users"
       }
     ]
-  }); // DB에서 모든 데이터를 다 가져옴
+  }); 
   res.status(200).json(data);
   // res.render("showPost", { data });
 };
@@ -46,10 +45,8 @@ const renderCreatePost = async (req, res) => {
  */
 const createPost = async (req, res) => {
   try {
-    const id = req.params.id; // 쿠키로부터 값 가져오는 부분
+    const id = req.user.id; // 쿠키로부터 값 가져오는 부분
     const { title, body, vote_content, post_tag } = req.body;
-    console.log(title, body, vote_content, post_tag);
-    console.log(req.body.post_id);
 
     // 게시글 생성
     const newPost = await Post.create({
@@ -57,8 +54,8 @@ const createPost = async (req, res) => {
       body: body,
       vote_content: vote_content,
       post_tag: post_tag,
-      // user_id: 3 // 쿠키로부터 가져온 id 넣기
-      user_id: 1 // 임시로 설정(로그인 된 id를 받아와 자동으로 넣도록 후에 수정할 것)
+      user_id: id // 쿠키로부터 가져온 id 넣기
+      // user_id: 1 // 임시로 설정(로그인 된 id를 받아와 자동으로 넣도록 후에 수정할 것)
     });
 
     console.log("데이터베이스에 값 삽입 완료");
@@ -129,8 +126,8 @@ const addComment = async (req, res) => {
 const likePost = async (req, res) => {
   // const id = req.params.id; // 쿠키로부터 받아온 값
   const postId = req.params.post_id;
-  const userId = 2; // 실제 로그인된 사용자 ID로 대체할 것
-  // const userId= id // 쿠키에서 받아온 값 사용
+  // const userId = 2; // 실제 로그인된 사용자 ID로 대체할 것
+  const userId= req.user.id // 쿠키에서 받아온 값 사용
 
   try {
     const [like, created] = await Like.findOrCreate({
