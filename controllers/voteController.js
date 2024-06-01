@@ -1,4 +1,5 @@
 const Vote = require("../models/post/voteModel");
+const verifyToken= require("../middleware/token");
 
 /**
  * 투표 응답 기록
