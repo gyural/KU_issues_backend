@@ -111,7 +111,7 @@ PostModel.belongsTo(UserModel, {
   }
 });
 
-
+//-----------------------------------------------------------------------
 // users - likes (id, post_id)
 UserModel.hasMany(LikeModel, {
   foreignKey: {
@@ -121,14 +121,6 @@ UserModel.hasMany(LikeModel, {
   onDelete: 'CASCADE' // User가 삭제되면 연결된 모든 Like도 함께 삭제됨
 });
 
-PostModel.hasMany(LikeModel, {
-  foreignKey: {
-    name: 'post_id', // 외래 키 이름은 post_id
-    allowNull: false // post_id 외래 키는 NOT NULL로 설정
-  },
-  onDelete: 'CASCADE' // Post가 삭제되면 연결된 모든 Like도 함께 삭제됨
-});
-
 LikeModel.belongsTo(UserModel, {
   foreignKey: {
     name: 'user_id', // 외래 키 이름은 user_id
@@ -136,7 +128,19 @@ LikeModel.belongsTo(UserModel, {
   }
 });
 
+PostModel.hasMany(LikeModel, {
+  as: "likes",
+  foreignKey: {
+    name: 'post_id', // 외래 키 이름은 post_id
+    allowNull: false // post_id 외래 키는 NOT NULL로 설정
+  },
+  onDelete: 'CASCADE' // Post가 삭제되면 연결된 모든 Like도 함께 삭제됨
+});
+
+
+
 LikeModel.belongsTo(PostModel, {
+  as: 'posts',
   foreignKey: {
     name: 'post_id', // 외래 키 이름은 post_id
     allowNull: false // post_id 외래 키는 NOT NULL로 설정

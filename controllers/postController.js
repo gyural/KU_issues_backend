@@ -3,18 +3,23 @@ const Like = require("../models/post/likeModel");
 const Vote = require("../models/post/voteModel");
 const Comment = require("../models/comment/commentModel");
 const { VoteModel } = require("../models");
-// const { Sequelize } = require('sequelize');
+const { Sequelize } = require('sequelize');
 
 /**
  * 모든 게시판 내용 가져오기
  * GET /api/posts
  */
 const getAllPosts = async (req, res) => {
+  // const data= await Post.findAll();
   const data = await Post.findAll({
     include: [
       {
         model: Vote,
         as: "votes"
+      },
+      {
+        model: Like,
+        as: "likes"
       }
     ]
   }); // DB에서 모든 데이터를 다 가져옴
