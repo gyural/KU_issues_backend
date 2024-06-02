@@ -113,9 +113,13 @@ const createResponse = async (req, res) => {
     })
     
     const surveyAnswer =  await createAnswers(answerList, surveyResponse.surveyID, surveyResponse.id)
-    const result = {surveyResponse: surveyResponse, surveyAnswer: surveyAnswer}
-    
-    return res.status(201).json(result)
+    if(surveyAnswer){
+      const result = {surveyResponse: surveyResponse, surveyAnswer: surveyAnswer}
+      
+      return res.status(201).json(result)
+    }else{
+      return res.status(500).json({message: 'error occured'})
+    }
   } catch (error) {
     console.log(error)
     if(surveyResponse){
@@ -138,14 +142,18 @@ const createResponse = async (req, res) => {
  * @param {string} answer.answer
  * @returns {odjecst[]} surveyAnswers
  */
-const createAnswers = async (answerList, id, resID) => {
+const createAnswers = async (answer, id, resID) => {
   try {
+
     // 질문 리스트 가져오기
     let Questions =  await getQuestions(id)
     Questions = Questions.map((item)=> {return item.dataValues})
+    const answerList = answer[0]
+    
     if(answerList.length !== Questions.length){
-      return -1
+      return false
     }
+    console.log(answerList)
     // 질문 생성
     const surveyAnswers = await Promise.all(answerList.map(async (surveyAnswer, idx) => {
       const a = await answerModel.create({
