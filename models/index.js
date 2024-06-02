@@ -12,8 +12,9 @@ const VoteModel = require("./post/voteModel");
 const CommentModel = require("./comment/commentModel");
 
 const db = {}
-const sequelize = new Sequelize('project', 'user', '1234', {
-  host: 'localhost',
+const sequelize = new Sequelize('project', 'root', '1234', {
+  host: 'db',
+  port: 3306,
   dialect: 'mariadb', // MariaDB 사용
   logging: false // 쿼리 로깅 비활성화
 });

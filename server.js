@@ -7,7 +7,7 @@ const postRouter= require("./routers/postRoute");
 const cors = require('cors');
 
 const app = express();
-const port = 8080;
+const port = 3005;
 
 sequelize
 .sync({ force: false })
